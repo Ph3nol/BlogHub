@@ -133,6 +133,8 @@ foreach ($category->getPosts() as $post) {
 * Slug: `$post->getSlug()`
 * Excerpt: `$post->getExcerpt([string $separator = ' [...]'])`
 * Tags collection: `$post->getTags()`
+* Creation DateTime: `$post->getCreatedAt()`
+* Update DateTime: `$post->getUpdatedAt()`
 
 ### Tags list
 
