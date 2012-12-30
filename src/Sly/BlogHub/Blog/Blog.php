@@ -56,7 +56,7 @@ class Blog
     public function __construct(Repository $repository)
     {
         $this->repository = $repository;
-        $this->rootDir    = realpath(dirname(__FILE__).'/../../../../');
+        $this->rootDir    = realpath(dirname(__FILE__).'/../../../');
         $this->gitDir     = sprintf('%s/%s', $this->rootDir, $this->repository->getPath());
         $this->categories = new CategoryCollection();
         $this->posts      = new PostCollection();
