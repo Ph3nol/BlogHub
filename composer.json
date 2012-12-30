@@ -1,0 +1,18 @@
+{
+    "name": "sly/blog-hub",
+    "description": "Use a Git repository to generate blog entities and contents.",
+    "authors": [
+        {
+            "name": "Cédric Dugat",
+            "email": "cedric@dugat.me"
+        }
+    ],
+    "require": {
+        "cypresslab/gitelephant": "0.9.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sly": "src/"
+        }
+    }
+}
