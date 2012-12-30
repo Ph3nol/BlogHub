@@ -33,11 +33,14 @@ class TagCollection implements \IteratorAggregate
     }
 
     /**
+     * Add.
+     * 
+     * @param string                 $key Key
      * @param \Sly\BlogHub\Model\Tag $tag Tag
      */
-    public function add(Tag $tag)
+    public function add($key, Tag $tag)
     {
-        $this->coll[] = $tag;
+        $this->coll[$key] = $tag;
     }
 
     /**
@@ -47,7 +50,7 @@ class TagCollection implements \IteratorAggregate
      */
     public function count()
     {
-        return count($this->coll);
+        return count($this->getIterator());
     }
 
     /**

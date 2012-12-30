@@ -7,6 +7,7 @@ use GitElephant\Repository,
 
 use Sly\BlogHub\Collection\CategoryCollection,
     Sly\BlogHub\Collection\PostCollection,
+    Sly\BlogHub\Collection\TagCollection,
     Sly\BlogHub\Model\Category,
     Sly\BlogHub\Model\Post;
 
@@ -59,14 +60,15 @@ class Blog
         $this->gitDir     = sprintf('%s/%s', $this->rootDir, $this->repository->getPath());
         $this->categories = new CategoryCollection();
         $this->posts      = new PostCollection();
+        $this->tags       = new TagCollection();
 
-        $this->initCategoriesAndPosts();
+        $this->initEntities();
     }
 
     /**
-     * Initialize categories and posts.
+     * Initialize categories, posts and tags.
      */
-    private function initCategoriesAndPosts()
+    private function initEntities()
     {
         $branchName = $this->repository->getMainBranch()->getName();
 
@@ -88,6 +90,10 @@ class Blog
 
                     $categoryPosts->add($post);
                     $this->posts->add($post);
+
+                    foreach ($post->getTags() as $tag) {
+                        $this->tags->add((string) $tag, $tag);
+                    }
                 }
 
                 $category->setPosts($categoryPosts);
@@ -105,6 +111,16 @@ class Blog
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Get Tags value.
+     *
+     * @return \Sly\BlogHub\Collection\TagCollection Tags value to get
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**

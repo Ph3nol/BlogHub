@@ -47,7 +47,7 @@ class PostCollection implements \IteratorAggregate
      */
     public function count()
     {
-        return count($this->coll);
+        return count($this->getIterator());
     }
 
     /**

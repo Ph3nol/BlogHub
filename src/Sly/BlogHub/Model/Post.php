@@ -235,7 +235,7 @@ class Post
      */
     public function addTag(Tag $tag)
     {
-        $this->tags->add($tag);
+        $this->tags->add((string) $tag, $tag);
 
         return $this->tags;
     }
