@@ -1,6 +1,10 @@
 {
-    "name": "sly/blog-hub",
-    "description": "Use a Git repository to generate blog entities and contents.",
+    "name": "sly/bloghub",
+    "description": "Use a Git repository to generate blog entities and contents. PlainText, HTML and Markdown formats supported.",
+    "keywords": ["blog", "git", "repository", "repositories", "html", "markdown", "generated", "content"],
+    "homepage": "https://github.com/Ph3nol/BlogHub",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Cédric Dugat",
@@ -11,6 +15,11 @@
         "cypresslab/gitelephant": "0.9.*",
         "dflydev/markdown": "1.0.*"
     },
+    "require-dev": {
+        "atoum/atoum": "master"
+
+    },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
             "Sly": "src/"
