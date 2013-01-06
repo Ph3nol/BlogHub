@@ -99,6 +99,8 @@ class Post
     {
         $this->title = $title;
 
+        $this->setSlug(\Sly\BlogHub\Util\Urlizer::urlize($title));
+
         return $this;
     }
 
@@ -321,12 +323,10 @@ class Post
     public function setDataFromEntry(TreeObject $entry, $gitDir)
     {
         $entryTitle    = str_replace(array('.md', '.markdown'), array(), (string) $entry);
-        $entrySlug     = \Sly\BlogHub\Util\String::slugify($entryTitle);
         $postPath      = sprintf('%s/%s/%s', $gitDir, $this->getCategory(), $entry->getName());
         $parsedContent = new PostParser(file_get_contents($postPath));
 
         $this->setTitle($entryTitle);
-        $this->setSlug($entrySlug);
         $this->setParsedContent($parsedContent);
         $this->setContent((string) $this->getParsedContent()->getContent());
 

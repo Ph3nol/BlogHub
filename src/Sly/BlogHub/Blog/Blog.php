@@ -5,11 +5,13 @@ namespace Sly\BlogHub\Blog;
 use GitElephant\Repository,
     GitElephant\Objects\TreeObject;
 
-use Sly\BlogHub\Collection\CategoryCollection,
+use Sly\BlogHub\Collection\Collection,
+    Sly\BlogHub\Collection\CategoryCollection,
     Sly\BlogHub\Collection\PostCollection,
     Sly\BlogHub\Collection\TagCollection,
     Sly\BlogHub\Model\Category,
-    Sly\BlogHub\Model\Post;
+    Sly\BlogHub\Model\Post,
+    Sly\BlogHub\Query\QueryBuilder;
 
 /**
  * Blog.
@@ -34,19 +36,14 @@ class Blog
     private $gitDir;
 
     /**
-     * @var \Sly\BlogHub\Collection\PostCollection
+     * @var \Sly\BlogHub\Collection\Collection
      */
-    private $posts;
+    private $collections;
 
     /**
-     * @var \Sly\BlogHub\Collection\TagCollection
+     * @var \Sly\BlogHub\Query\QueryBuilder
      */
-    private $tags;
-
-    /**
-     * @var \Sly\BlogHub\Collection\CategoryCollection
-     */
-    private $categories;
+    private $query;
 
     /**
      * Constructor.
@@ -55,14 +52,20 @@ class Blog
      */
     public function __construct(Repository $repository)
     {
-        $this->repository = $repository;
-        $this->rootDir    = realpath(dirname(__FILE__).'/../../../');
-        $this->gitDir     = sprintf('%s/%s', $this->rootDir, $this->repository->getPath());
-        $this->categories = new CategoryCollection();
-        $this->posts      = new PostCollection();
-        $this->tags       = new TagCollection();
+        $this->repository  = $repository;
+        $this->rootDir     = realpath(dirname(__FILE__).'/../../../');
+        $this->gitDir      = sprintf('%s/%s', $this->rootDir, $this->repository->getPath());
+        $this->collections = new Collection();
+
+        foreach ($this->getModelsNames() as $modelName) {
+            $collectionClassName = sprintf('\Sly\BlogHub\Collection\%sCollection', $modelName);
+
+            $this->collections->add($modelName, new $collectionClassName());
+        }
 
         $this->initEntities();
+
+        $this->query = new QueryBuilder($this);
     }
 
     /**
@@ -89,18 +92,57 @@ class Blog
                     $post->setDataFromEntry($treeEntry, $this->getGitDir());
 
                     $categoryPosts->add($post);
-                    $this->posts->add($post);
+                    $this->getPosts()->add($post);
 
                     foreach ($post->getTags() as $tag) {
-                        $this->tags->add((string) $tag, $tag);
+                        $this->getTags()->add((string) $tag, $tag);
                     }
                 }
 
                 $category->setPosts($categoryPosts);
 
-                $this->categories->add($category);
+                $this->getCategories()->add($category);
             }
         }
+    }
+
+    /**
+     * Get models names.
+     *
+     * @param boolean $withCollection Only with an associated collection
+     * 
+     * @return array
+     */
+    private function getModelsNames($withCollection = true)
+    {
+        $models = array();
+
+        foreach (glob($this->getRootDir().'/*/*/Model/*') as $modelClass) {
+            $modelClassInfo = pathinfo($modelClass);
+
+            $collectionClassPath = sprintf(
+                '%s/%s.%s',
+                str_replace('Model', 'Collection', $modelClassInfo['dirname']),
+                $modelClassInfo['filename'].'Collection',
+                $modelClassInfo['extension']
+            );
+
+            if (false === $withCollection || file_exists($collectionClassPath)) {
+                $models[] = $modelClassInfo['filename'];
+            }
+        }
+
+        return $models;
+    }
+
+    /**
+     * Get collections.
+     * 
+     * @return \Sly\BlogHub\Collection\Collection
+     */
+    public function getCollections()
+    {
+        return $this->collections;
     }
 
     /**
@@ -110,7 +152,17 @@ class Blog
      */
     public function getPosts()
     {
-        return $this->posts;
+        return $this->getCollections()->get('Post');
+    }
+
+    /**
+     * Get Categories value.
+     *
+     * @return \Sly\BlogHub\Collection\CategoryCollection Categories value to get
+     */
+    public function getCategories()
+    {
+        return $this->getCollections()->get('Category');
     }
 
     /**
@@ -120,7 +172,7 @@ class Blog
      */
     public function getTags()
     {
-        return $this->tags;
+        return $this->getCollections()->get('Tag');
     }
 
     /**
@@ -144,12 +196,12 @@ class Blog
     }
 
     /**
-     * Get Categories value.
-     *
-     * @return \Sly\BlogHub\Collection\CategoryCollection Categories value to get
+     * Get QueryBuilder.
+     * 
+     * @return \Sly\BlogHub\Query\QueryBuilder
      */
-    public function getCategories()
+    public function getQuery()
     {
-        return $this->categories;
+        return $this->query;
     }
 }

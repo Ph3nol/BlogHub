@@ -48,3 +48,14 @@ $blog = new Blog($repo);
         </li>
     <?php endforeach ?> 
 </ul>
+
+<h2>Specific Post</h2>
+
+<?php
+    $query = $blog->getQuery();
+    $post = $query->from('Post')->getOneBySlug('this-is-a-test');
+?>
+
+<h3><?php echo $post->getTitle() ?></h3>
+
+<p><?php echo $post->getExcerpt() ?></p>
