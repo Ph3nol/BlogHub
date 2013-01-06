@@ -58,4 +58,4 @@ $blog = new Blog($repo);
 
 <h3><?php echo $post->getTitle() ?></h3>
 
-<p><?php echo $post->getExcerpt() ?></p>
+<p><?php echo $post->getContent() ?></p>

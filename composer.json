@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "cypresslab/gitelephant": "0.9.*"
+        "cypresslab/gitelephant": "0.9.*",
+        "dflydev/markdown": "1.0.*"
     },
     "autoload": {
         "psr-0": {

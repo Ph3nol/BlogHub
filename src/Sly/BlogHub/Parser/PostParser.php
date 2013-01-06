@@ -2,6 +2,8 @@
 
 namespace Sly\BlogHub\Parser;
 
+use dflydev\markdown\MarkdownParser;
+
 /**
  * PostParser.
  *
@@ -35,7 +37,13 @@ class PostParser
 
         $contentElement = explode('*/', $rootContent);
 
-        $this->elements['content'] = $contentElement[1];
+        if (isset($this->elements['format']) && 'markdown' == $this->elements['format']) {
+            $markdownParser = new MarkdownParser();
+
+            $this->elements['content'] = $markdownParser->transformMarkdown($contentElement[1]);
+        } else {
+            $this->elements['content'] = $contentElement[1];
+        }
     }
 
     /**

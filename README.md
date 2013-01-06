@@ -71,6 +71,7 @@ Here is an example:
  * @createdAt 2013-01-01
  * @description This is my post description.
  * @tags tag1, tag2, tag3
+ * @format markdown
  */
 
 # My post title

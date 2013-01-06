@@ -184,10 +184,12 @@ class Post
     public function getExcerpt($suffix = ' [...]')
     {
         if ($this->getParsedContent()->getDescription()) {
-            return (string) $this->getParsedContent()->getDescription();
+            $excerpt = (string) $this->getParsedContent()->getDescription();
         } else {
-            return sprintf('%s%s', $this->excerpt, $suffix);
+            $excerpt = sprintf('%s%s', $this->excerpt, $suffix);
         }
+
+        return strip_tags($excerpt);
     }
     
     /**
