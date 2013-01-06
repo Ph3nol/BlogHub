@@ -153,3 +153,14 @@ foreach ($post->getTags() as $tag) {
 **Elements:**
 
 * Tag name: `(string) $tag` or `$tag->getName()`
+
+
+## Query Builder
+
+You can use the QueryBuilder to retreive a specific model entity.
+Here is an example:
+
+``` php
+$query = $blog->getQuery(); // Get QueryBuilder from Blog Manager service
+$post  = $query->from('Post')->getOneBySlug('hello-world'); // Get the Post from its slug
+```

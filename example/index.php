@@ -53,7 +53,7 @@ $blog = new Blog($repo);
 
 <?php
     $query = $blog->getQuery();
-    $post = $query->from('Post')->getOneBySlug('this-is-a-test');
+    $post  = $query->from('Post')->getOneBySlug('this-is-a-test');
 ?>
 
 <h3><?php echo $post->getTitle() ?></h3>
